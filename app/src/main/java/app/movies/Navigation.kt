@@ -1,12 +1,13 @@
 package app.movies
 
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.movies.home.Home
+import app.movies.movielist.MovieList
+import app.movies.movielist.MovieListMode
 
 internal sealed class Destinations(val path: String) {
     object MoviesHome : Destinations("movies")
@@ -22,8 +23,8 @@ internal fun MoviesNavigation(
     ) {
         composable(Destinations.MoviesHome.path) {
             Home(
-                films = { Text(text = "Films") },
-                favorites = { Text(text = "Favorites") }
+                films = { MovieList(mode = MovieListMode.All) },
+                favorites = { MovieList(mode = MovieListMode.Favorites) }
             )
         }
     }
