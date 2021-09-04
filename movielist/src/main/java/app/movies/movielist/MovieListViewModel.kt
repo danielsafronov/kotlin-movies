@@ -1,16 +1,16 @@
 package app.movies.movielist
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.movies.data.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 @HiltViewModel
-internal class MovieListViewModel @Inject constructor() : ViewModel() {
+internal class MovieListViewModel @Inject constructor(
+    private val repository: MovieRepository,
+) : ViewModel() {
     private val mode: MutableStateFlow<MovieListState.Mode> = MutableStateFlow(MovieListState.Mode.All)
     private val loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
