@@ -19,6 +19,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField "String", "TMDB_API_KEY", "\"${MOVIES_TMDB_API_KEY}\""
     }
 
     buildTypes {
@@ -50,6 +52,9 @@ android {
 }
 
 dependencies {
+    implementation project(':data')
+    implementation project(':network')
+    implementation project(':storage')
     implementation project(':home')
     implementation project(':movielist')
 
