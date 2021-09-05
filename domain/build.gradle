@@ -26,5 +26,14 @@ android {
 }
 
 dependencies {
+    implementation project(':base')
     implementation project(':data')
+    implementation project(':storage')
+    implementation project(':network')
+
+    implementation "androidx.room:room-paging:$room_paging_version"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinx_coroutines_android_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 }

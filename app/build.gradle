@@ -52,7 +52,9 @@ android {
 }
 
 dependencies {
+    implementation project(':base')
     implementation project(':data')
+    implementation project(':domain')
     implementation project(':home')
     implementation project(':movielist')
     implementation project(':network')

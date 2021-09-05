@@ -1,14 +1,22 @@
 package app.movies.storage.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    tableName = "movies",
+    indices = [
+        Index(value = ["sid"], unique = true)
+    ]
+)
 data class MovieEntity(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    val sid: Long,
-    val title: String,
-    val description: String,
-    val rating: Double,
-    val posterPath: String,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Long = 0,
+    @ColumnInfo(name = "sid") val sid: Long = 0,
+    @ColumnInfo(name = "title") val title: String = "",
+    @ColumnInfo(name = "description") val description: String = "",
+    @ColumnInfo(name = "rating") val rating: Double = 0.0,
+    @ColumnInfo(name = "poster_path") val posterPath: String? = null,
+    @ColumnInfo(name = "page") val page: Int = 0,
 )

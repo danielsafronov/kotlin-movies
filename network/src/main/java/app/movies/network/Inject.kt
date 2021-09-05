@@ -17,7 +17,7 @@ object NetworkModule {
     @Singleton
     internal fun provideRetrofit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl("https://api.themoviedb.org/3/")
+            .baseUrl("https://api.themoviedb.org/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

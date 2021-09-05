@@ -12,6 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemsIndexed
+import app.movies.data.model.Movie
 
 enum class MovieListMode {
     All,
@@ -22,7 +25,7 @@ enum class MovieListMode {
 fun MovieList(mode: MovieListMode) {
     val viewModel: MovieListViewModel = hiltViewModel()
     viewModel.setMode(
-        when(mode) {
+        when (mode) {
             MovieListMode.All -> MovieListState.Mode.All
             MovieListMode.Favorites -> MovieListState.Mode.Favorites
         }
@@ -37,17 +40,21 @@ fun MovieList(mode: MovieListMode) {
 internal fun Content(
     viewModel: MovieListViewModel,
 ) {
+    val pagingItems = viewModel.pagedMovies.collectAsLazyPagingItems()
     val state = viewModel.state.collectAsState()
 
     LazyColumn {
-        items(5) {
-            MovieCard()
+        itemsIndexed(pagingItems) { _, item ->
+            item?.let {
+                MovieCard(movie = it)
+            }
         }
     }
 }
 
 @Composable
 internal fun MovieCard(
+    movie: Movie,
     onShareClick: () -> Unit = {},
     onFavoriteClick: () -> Unit = {},
 ) {
@@ -60,9 +67,9 @@ internal fun MovieCard(
         Column(
             modifier = Modifier.padding(16.dp),
         ) {
-            Text(text = "Movie Title")
+            Text(text = movie.title)
 
-            Text(text = "Movie Description")
+            Text(text = movie.description)
 
             Box(
                 modifier = Modifier.fillMaxWidth(),

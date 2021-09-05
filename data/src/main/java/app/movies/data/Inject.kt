@@ -1,11 +1,12 @@
 package app.movies.data
 
-import app.movies.data.repository.MovieRepository
-import app.movies.data.repository.MovieRepositoryImpl
+import app.movies.data.mapper.MovieDtoToMovieEntityMapper
 import app.movies.data.repository.network.MovieNetworkRepository
 import app.movies.data.repository.network.MovieNetworkRepositoryImpl
 import app.movies.data.repository.storage.MovieStorageRepository
 import app.movies.data.repository.storage.MovieStorageRepositoryImpl
+import app.movies.data.store.MovieStore
+import app.movies.data.store.MovieStoreImpl
 import app.movies.network.MovieSdk
 import app.movies.storage.dao.MovieDao
 import dagger.Module
@@ -37,11 +38,13 @@ object DataModule {
 
     @Provides
     @Singleton
-    internal fun provideMovieRepository(
+    internal fun provideMovieStore(
         networkRepository: MovieNetworkRepository,
         storageRepository: MovieStorageRepository,
-    ): MovieRepository = MovieRepositoryImpl(
+        movieDtoToMovieEntityMapper: MovieDtoToMovieEntityMapper,
+    ): MovieStore = MovieStoreImpl(
         networkRepository = networkRepository,
         storageRepository = storageRepository,
+        movieDtoToMovieEntityMapper = movieDtoToMovieEntityMapper,
     )
 }
