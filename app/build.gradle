@@ -53,10 +53,11 @@ android {
 
 dependencies {
     implementation project(':data')
-    implementation project(':network')
-    implementation project(':storage')
     implementation project(':home')
     implementation project(':movielist')
+    implementation project(':network')
+    implementation project(':storage')
+    implementation project(':ui')
 
     implementation "androidx.core:core-ktx:$core_version"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
