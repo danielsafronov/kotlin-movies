@@ -1,5 +1,6 @@
 package app.movies.movielist
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
@@ -7,14 +8,18 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
 import app.movies.data.model.Movie
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
 
 enum class MovieListMode {
     All,
@@ -67,9 +72,44 @@ internal fun MovieCard(
         Column(
             modifier = Modifier.padding(16.dp),
         ) {
-            Text(text = movie.title)
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier.weight(1F),
+                    contentAlignment = Alignment.TopStart,
+                ) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        if (movie.posterUrl != null)
+                            Poster(
+                                url = movie.posterUrl!!,
+                                modifier = Modifier.size(150.dp),
+                            )
 
-            Text(text = movie.description)
+                        Text(
+                            text = movie.rating.toString(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(0.dp, 8.dp),
+                            textAlign = TextAlign.Start,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+                }
+
+                Box(modifier = Modifier.weight(2F)) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = movie.title,
+                            fontWeight = FontWeight.Bold,
+                        )
+
+                        Text(
+                            text = movie.description,
+                            maxLines = 5,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
+            }
 
             Box(
                 modifier = Modifier.fillMaxWidth(),
@@ -91,4 +131,18 @@ internal fun MovieCard(
             }
         }
     }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+internal fun Poster(
+    url: String,
+    modifier: Modifier = Modifier,
+) {
+    Image(
+        painter = rememberImagePainter(url),
+        contentDescription = null,
+        modifier = modifier,
+        alignment = Alignment.TopStart,
+    )
 }

@@ -17,6 +17,6 @@ data class MovieEntity(
     @ColumnInfo(name = "title") val title: String = "",
     @ColumnInfo(name = "description") val description: String = "",
     @ColumnInfo(name = "rating") val rating: Double = 0.0,
-    @ColumnInfo(name = "poster_path") val posterPath: String? = null,
+    @ColumnInfo(name = "poster_url") val posterUrl: String? = null,
     @ColumnInfo(name = "page") val page: Int = 0,
 )

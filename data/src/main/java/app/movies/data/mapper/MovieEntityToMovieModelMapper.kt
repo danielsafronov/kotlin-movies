@@ -14,7 +14,7 @@ class MovieEntityToMovieModelMapper @Inject constructor(): Mapper<MovieEntity, M
         title = from.title,
         description = from.description,
         rating = from.rating,
-        posterPath = from.posterPath,
+        posterUrl = from.posterUrl,
         page = from.page,
     )
 }

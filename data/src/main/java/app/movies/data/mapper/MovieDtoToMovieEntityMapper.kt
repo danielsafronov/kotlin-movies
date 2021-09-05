@@ -13,6 +13,6 @@ class MovieDtoToMovieEntityMapper @Inject constructor(): Mapper<MovieDto, MovieE
         title = from.title,
         description = from.overview,
         rating = from.voteAverage,
-        posterPath = from.posterPath,
+        posterUrl = "https://image.tmdb.org/t/p/w500${from.posterPath}",
     )
 }
