@@ -3,6 +3,7 @@ package app.movies.storage
 import android.content.Context
 import android.os.Debug
 import androidx.room.Room
+import app.movies.storage.dao.FavoriteMovieDao
 import app.movies.storage.dao.MovieDao
 import dagger.Module
 import dagger.Provides
@@ -37,4 +38,9 @@ object DatabaseDaoModule {
     @Singleton
     internal fun provideMovieDao(database: MoviesDatabase): MovieDao =
         database.movieDao()
+
+    @Provides
+    @Singleton
+    internal fun provideFavoriteMovieDao(database: MoviesDatabase): FavoriteMovieDao =
+        database.favoriteMovieDao()
 }

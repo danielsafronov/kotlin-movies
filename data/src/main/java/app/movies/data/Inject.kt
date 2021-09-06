@@ -3,11 +3,14 @@ package app.movies.data
 import app.movies.data.mapper.MovieDtoToMovieEntityMapper
 import app.movies.data.repository.network.MovieNetworkRepository
 import app.movies.data.repository.network.MovieNetworkRepositoryImpl
+import app.movies.data.repository.storage.FavoriteMovieStorageRepository
+import app.movies.data.repository.storage.FavoriteMovieStorageRepositoryImpl
 import app.movies.data.repository.storage.MovieStorageRepository
 import app.movies.data.repository.storage.MovieStorageRepositoryImpl
 import app.movies.data.store.MovieStore
 import app.movies.data.store.MovieStoreImpl
 import app.movies.network.MovieSdk
+import app.movies.storage.dao.FavoriteMovieDao
 import app.movies.storage.dao.MovieDao
 import dagger.Module
 import dagger.Provides
@@ -47,4 +50,13 @@ object DataModule {
         storageRepository = storageRepository,
         movieDtoToMovieEntityMapper = movieDtoToMovieEntityMapper,
     )
+
+    @Provides
+    @Singleton
+    internal fun provideFavoriteMovieStorageRepository(
+        dao: FavoriteMovieDao,
+    ): FavoriteMovieStorageRepository =
+        FavoriteMovieStorageRepositoryImpl(
+            dao = dao,
+        )
 }

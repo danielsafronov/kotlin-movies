@@ -45,7 +45,7 @@ fun MovieList(mode: MovieListMode) {
 internal fun Content(
     viewModel: MovieListViewModel,
 ) {
-    val pagingItems = viewModel.pagedMovies.collectAsLazyPagingItems()
+    val pagingItems = viewModel.movies.collectAsLazyPagingItems()
     val state = viewModel.state.collectAsState()
 
     LazyColumn {
