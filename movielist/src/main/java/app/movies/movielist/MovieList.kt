@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
-import app.movies.data.model.Movie
+import app.movies.data.resultmodel.MovieWithFavorite
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 
@@ -52,13 +52,15 @@ internal fun Content(
         itemsIndexed(pagingItems) { _, item ->
             item?.let {
                 MovieCard(
-                    movie = it,
-                    onFavoriteClick = { movie ->
-                        viewModel.submitAction(
-                            MovieListAction.AddToFavoriteAction(
-                                movieId = movie.id,
-                            )
-                        )
+                    movieWithFavorite = it,
+                    onFavoriteClick = { movieWithFavorite ->
+                        val action = if (movieWithFavorite.favorite != null) {
+                            MovieListAction.RemoveFromFavorite(favoriteMovieId = movieWithFavorite.favorite!!.id)
+                        } else {
+                            MovieListAction.AddToFavoriteAction(movieId = movieWithFavorite.movie.id)
+                        }
+
+                        viewModel.submitAction(action)
                     }
                 )
             }
@@ -68,10 +70,11 @@ internal fun Content(
 
 @Composable
 internal fun MovieCard(
-    movie: Movie,
-    onShareClick: (movie: Movie) -> Unit = {},
-    onFavoriteClick: (movie: Movie) -> Unit = {},
+    movieWithFavorite: MovieWithFavorite,
+    onShareClick: (movie: MovieWithFavorite) -> Unit = {},
+    onFavoriteClick: (movie: MovieWithFavorite) -> Unit = {},
 ) {
+    val movie = movieWithFavorite.movie
 
     Card(
         modifier = Modifier
@@ -125,15 +128,15 @@ internal fun MovieCard(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 Row {
-                    TextButton(onClick = { onShareClick() }) {
+                    TextButton(onClick = { onShareClick(movieWithFavorite) }) {
                         Text(
                             text = "Share".uppercase(),
                         )
                     }
 
-                    TextButton(onClick = { onFavoriteClick(movie) }) {
+                    TextButton(onClick = { onFavoriteClick(movieWithFavorite) }) {
                         Text(
-                            text = "Add to favorite".uppercase(),
+                            text = if (movieWithFavorite.favorite == null) "Add to favorite".uppercase() else "Remove from favorite".uppercase(),
                         )
                     }
                 }

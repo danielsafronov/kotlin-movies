@@ -5,8 +5,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import app.movies.data.model.Movie
+import app.movies.data.resultmodel.MovieWithFavorite
 import app.movies.domain.interactor.AddMovieToFavorite
+import app.movies.domain.interactor.RemoveMovieFromFavorite
 import app.movies.domain.observer.ObservePagedFavoriteMovies
 import app.movies.domain.observer.ObservePagedMovies
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ internal class MovieListViewModel @Inject constructor(
     observePagedMovies: ObservePagedMovies,
     observePagedFavoriteMovies: ObservePagedFavoriteMovies,
     private val addMovieToFavorite: AddMovieToFavorite,
+    private val removeMovieFromFavorite: RemoveMovieFromFavorite,
 ) : ViewModel() {
     private val mode: MutableStateFlow<MovieListState.Mode> = MutableStateFlow(MovieListState.Mode.All)
     private val loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -40,7 +42,7 @@ internal class MovieListViewModel @Inject constructor(
         initialValue = MovieListState.Empty,
     )
 
-    var movies: Flow<PagingData<Movie>> = pagedMovies;
+    var movies: Flow<PagingData<MovieWithFavorite>> = pagedMovies;
 
     init {
         viewModelScope.launch {
@@ -62,6 +64,7 @@ internal class MovieListViewModel @Inject constructor(
             pendingActions.collect { action ->
                 when (action) {
                     is MovieListAction.AddToFavoriteAction -> addMovieToFavorite(action.movieId)
+                    is MovieListAction.RemoveFromFavorite -> removeMovieFromFavorite(action.favoriteMovieId)
                 }
             }
         }
@@ -77,8 +80,13 @@ internal class MovieListViewModel @Inject constructor(
         }
     }
 
-    private suspend fun addMovieToFavorite(movieId: Long) =
+    private suspend fun addMovieToFavorite(movieId: Long) {
         addMovieToFavorite(AddMovieToFavorite.Params(movieId))
+    }
+
+    private suspend fun removeMovieFromFavorite(movieId: Long) {
+        removeMovieFromFavorite(RemoveMovieFromFavorite.Params(movieId))
+    }
 
     companion object {
         val PAGING_CONFIG = PagingConfig(

@@ -4,12 +4,12 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import app.movies.storage.model.MovieEntity
+import app.movies.storage.resultmodel.MovieWithFavorite
 
 @OptIn(ExperimentalPagingApi::class)
-class PagedMediator<T>(
+class MovieWithFavoritePagedMediator<T>(
     private val fetch: suspend (page: Int) -> Unit
-) : RemoteMediator<Int, T>() where T: MovieEntity {
+) : RemoteMediator<Int, T>() where T: MovieWithFavorite {
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, T>
@@ -19,7 +19,7 @@ class PagedMediator<T>(
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
             LoadType.APPEND -> {
                 val lastItem = state.lastItemOrNull() ?: return MediatorResult.Success(endOfPaginationReached = true)
-                lastItem.page + 1
+                lastItem.movie.page + 1
             }
         }
 

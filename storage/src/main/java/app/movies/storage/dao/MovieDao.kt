@@ -3,11 +3,13 @@ package app.movies.storage.dao
 import androidx.paging.PagingSource
 import androidx.room.*
 import app.movies.storage.model.MovieEntity
+import app.movies.storage.resultmodel.MovieWithFavorite
 
 @Dao
 abstract class MovieDao {
+    @Transaction
     @Query("SELECT * FROM movies ORDER BY page ASC, id ASC")
-    abstract fun entriesPagingSource(): PagingSource<Int, MovieEntity>
+    abstract fun entriesPagingSource(): PagingSource<Int, MovieWithFavorite>
 
     @Query("DELETE FROM movies WHERE page = :page")
     abstract suspend fun deleteEntriesByPage(page: Int)

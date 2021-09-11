@@ -5,10 +5,10 @@ import androidx.room.Relation
 import app.movies.storage.model.FavoriteMovieEntity
 import app.movies.storage.model.MovieEntity
 
-data class FavoriteMovieWithMovie(
+data class MovieWithFavorite(
     @Embedded
-    val favoriteMovie: FavoriteMovieEntity,
+    val movie: MovieEntity,
 
-    @Relation(parentColumn = "movie_id", entityColumn = "id")
-    val movie: MovieEntity
+    @Relation(parentColumn = "id", entityColumn = "movie_id")
+    val favorite: FavoriteMovieEntity? = null,
 )
