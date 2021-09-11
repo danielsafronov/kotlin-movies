@@ -51,7 +51,16 @@ internal fun Content(
     LazyColumn {
         itemsIndexed(pagingItems) { _, item ->
             item?.let {
-                MovieCard(movie = it)
+                MovieCard(
+                    movie = it,
+                    onFavoriteClick = { movie ->
+                        viewModel.submitAction(
+                            MovieListAction.AddToFavoriteAction(
+                                movieId = movie.id,
+                            )
+                        )
+                    }
+                )
             }
         }
     }
@@ -60,8 +69,8 @@ internal fun Content(
 @Composable
 internal fun MovieCard(
     movie: Movie,
-    onShareClick: () -> Unit = {},
-    onFavoriteClick: () -> Unit = {},
+    onShareClick: (movie: Movie) -> Unit = {},
+    onFavoriteClick: (movie: Movie) -> Unit = {},
 ) {
 
     Card(
