@@ -6,6 +6,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import app.movies.data.model.Movie
+import app.movies.domain.interactor.AddMovieToFavorite
 import app.movies.domain.observer.ObservePagedFavoriteMovies
 import app.movies.domain.observer.ObservePagedMovies
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,11 +18,13 @@ import javax.inject.Inject
 internal class MovieListViewModel @Inject constructor(
     observePagedMovies: ObservePagedMovies,
     observePagedFavoriteMovies: ObservePagedFavoriteMovies,
+    private val addMovieToFavorite: AddMovieToFavorite,
 ) : ViewModel() {
     private val mode: MutableStateFlow<MovieListState.Mode> = MutableStateFlow(MovieListState.Mode.All)
     private val loading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val pagedMovies = observePagedMovies.flow.cachedIn(viewModelScope)
     private val pagedFavoriteMovies = observePagedFavoriteMovies.flow.cachedIn(viewModelScope)
+    private val pendingActions = MutableSharedFlow<MovieListAction>()
 
     val state: StateFlow<MovieListState> = combine(
         mode,
@@ -54,11 +57,28 @@ internal class MovieListViewModel @Inject constructor(
                 }
             }
         }
+
+        viewModelScope.launch {
+            pendingActions.collect { action ->
+                when (action) {
+                    is MovieListAction.AddToFavoriteAction -> addMovieToFavorite(action.movieId)
+                }
+            }
+        }
     }
 
     fun setMode(mode: MovieListState.Mode) {
         this.mode.value = mode
     }
+
+    fun submitAction(action: MovieListAction) {
+        viewModelScope.launch {
+            pendingActions.emit(action)
+        }
+    }
+
+    private suspend fun addMovieToFavorite(movieId: Long) =
+        addMovieToFavorite(AddMovieToFavorite.Params(movieId))
 
     companion object {
         val PAGING_CONFIG = PagingConfig(

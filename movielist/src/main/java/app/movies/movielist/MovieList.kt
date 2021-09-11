@@ -122,7 +122,7 @@ internal fun MovieCard(
                         )
                     }
 
-                    TextButton(onClick = { onFavoriteClick() }) {
+                    TextButton(onClick = { onFavoriteClick(movie) }) {
                         Text(
                             text = "Add to favorite".uppercase(),
                         )
